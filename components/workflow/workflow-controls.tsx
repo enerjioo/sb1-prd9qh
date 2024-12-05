@@ -25,11 +25,80 @@ import {
   BrainCircuit,
   Eraser,
   Scissors,
-  ArrowsMaximize
+  ImageIcon as ImageResizeIcon
 } from "lucide-react";
 import { useWorkflowStore } from "@/lib/stores/workflow-store";
 import { cn } from "@/lib/utils";
 import { WorkflowNotifications } from "./workflow-notifications";
+
+// Tüm node'lar için sabit değerler
+const NODE_CONFIG = {
+  HANDLE_SIZE: 8, // Bağlantı noktası boyutu
+  NODE_PADDING: 16, // Node içi padding
+  ICON_SIZE: 16, // İkon boyutu
+} as const;
+
+// Node stili
+const nodeStyle = {
+  width: `${NODE_CONFIG.ICON_SIZE + (NODE_CONFIG.NODE_PADDING * 2)}px`,
+  height: `${NODE_CONFIG.ICON_SIZE + (NODE_CONFIG.NODE_PADDING * 2)}px`,
+  position: "relative" as const,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  backgroundColor: "#fff",
+  border: "1px solid #e2e8f0",
+  borderRadius: "8px",
+} as const;
+
+// İkon container stili
+const iconContainerStyle = {
+  width: `${NODE_CONFIG.ICON_SIZE}px`,
+  height: `${NODE_CONFIG.ICON_SIZE}px`,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  position: "relative" as const,
+} as const;
+
+// Bağlantı noktası temel stili
+const handleBaseStyle = {
+  position: "absolute" as const,
+  width: `${NODE_CONFIG.HANDLE_SIZE}px`,
+  height: `${NODE_CONFIG.HANDLE_SIZE}px`,
+  backgroundColor: "#fff",
+  border: "2px solid #94a3b8",
+  borderRadius: "50%",
+  zIndex: 5,
+} as const;
+
+// Bağlantı noktası pozisyonları
+const getHandleStyles = () => ({
+  top: {
+    ...handleBaseStyle,
+    top: -NODE_CONFIG.HANDLE_SIZE / 2,
+    left: "50%",
+    transform: "translateX(-50%)",
+  },
+  right: {
+    ...handleBaseStyle,
+    top: "50%",
+    right: -NODE_CONFIG.HANDLE_SIZE / 2,
+    transform: "translateY(-50%)",
+  },
+  bottom: {
+    ...handleBaseStyle,
+    bottom: -NODE_CONFIG.HANDLE_SIZE / 2,
+    left: "50%",
+    transform: "translateX(-50%)",
+  },
+  left: {
+    ...handleBaseStyle,
+    top: "50%",
+    left: -NODE_CONFIG.HANDLE_SIZE / 2,
+    transform: "translateY(-50%)",
+  },
+});
 
 interface WorkflowControlsProps {
   className?: string;
@@ -46,7 +115,13 @@ export function WorkflowControls({ className }: WorkflowControlsProps) {
       data: { 
         label: platform || aiType || type.charAt(0).toUpperCase() + type.slice(1),
         platform,
-        aiType
+        aiType,
+        styles: {
+          node: nodeStyle,
+          icon: iconContainerStyle,
+          handles: getHandleStyles(),
+        },
+        config: NODE_CONFIG,
       },
     };
     addNode(node);
@@ -81,9 +156,9 @@ export function WorkflowControls({ className }: WorkflowControlsProps) {
               LinkedIn
             </DropdownMenuItem>
           </DropdownMenuGroup>
-          
+
           <DropdownMenuSeparator />
-          
+
           <DropdownMenuGroup>
             <DropdownMenuLabel>AI Tools</DropdownMenuLabel>
             <DropdownMenuItem onClick={() => handleAddNode("ai", "text-to-text")}>
@@ -119,17 +194,17 @@ export function WorkflowControls({ className }: WorkflowControlsProps) {
           <DropdownMenuSeparator />
 
           <DropdownMenuGroup>
-            <DropdownMenuLabel>Media Processing</DropdownMenuLabel>
+            <DropdownMenuLabel>Media Processing</DropdownMenuLabel> 
             <DropdownMenuItem onClick={() => handleAddNode("ai", "audio-cleaner")}>
               <Eraser className="h-4 w-4 mr-2" />
-              Audio Cleaner
+              Audio Cleaner 
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => handleAddNode("ai", "background-remover")}>
               <Scissors className="h-4 w-4 mr-2" />
               Background Remover
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => handleAddNode("ai", "image-resizer")}>
-              <ArrowsMaximize className="h-4 w-4 mr-2" />
+              <ImageResizeIcon className="h-4 w-4 mr-2" />
               Image Resizer
             </DropdownMenuItem>
           </DropdownMenuGroup>

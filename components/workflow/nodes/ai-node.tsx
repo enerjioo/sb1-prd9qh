@@ -14,7 +14,6 @@ import {
   X,
   Eraser,
   Scissors,
-  ArrowsMaximize
 } from "lucide-react";
 import { AINodeForm } from "../forms/ai-node-form";
 import { useWorkflowStore } from "@/lib/stores/workflow-store";
@@ -30,7 +29,6 @@ const aiTypeIcons = {
   "text-to-music": Music,
   "audio-cleaner": Eraser,
   "background-remover": Scissors,
-  "image-resizer": ArrowsMaximize,
 };
 
 export const AINode = memo(({ data, id }: NodeProps) => {
@@ -49,7 +47,7 @@ export const AINode = memo(({ data, id }: NodeProps) => {
         className={`p-4 min-w-[200px] ${showForm ? 'bg-primary/5' : ''}`}
         onClick={() => setShowForm(true)}
       >
-        <Handle type="target" position={Position.Left} />
+        <Handle type="target" position={Position.Left} style={{width: 14, height: 15}} />
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Icon className="h-4 w-4" />
@@ -64,7 +62,7 @@ export const AINode = memo(({ data, id }: NodeProps) => {
             <X className="h-4 w-4" />
           </Button>
         </div>
-        <Handle type="source" position={Position.Right} />
+        <Handle type="source" position={Position.Right} style={{width: 15, height: 15}} />
       </Card>
 
       {showForm && (
